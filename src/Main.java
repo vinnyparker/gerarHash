@@ -4,17 +4,29 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] arg) {
+        /*** esta licenca vem do cadastro salva no banco de dados***/
+        String licencaAlfaNumerica = "81D0-828F-A500";
+        String licencaNumerica = "708841119";
 
         String nome = "o nome que vem do cadastro";
-        Date dataValidade = new Date(); /** ou a data q vem do cadastro ***/
+        String dataValidade = "2020-01-01"; /** ou a data q vem do cadastro ***/
         String cnpj = "44.555.666/0001-99"; /*** cnpj tbm vem do cadastro ***/
 
-        String hash = geraHash(nome + dataValidade + cnpj);
-        System.out.println("Gera Um Hash Numerico = >> " + hash);
+        String stringToHash = nome + dataValidade + cnpj;
+        String codigo = nome + dataValidade + cnpj;
 
-        String hashControl = stringHexa(gerarHash(hash, "SHA-256")).toUpperCase();
+        codigo = geraHash(codigo);
+        System.out.println("Gera Um Hash Numerico = >> " + codigo);
+        System.out.println("@@@@@@   a licença Numericaa combina com a do banco?  >>>> " + licencaNumerica.matches(codigo));
+
+        String hashControl = stringHexa(gerarHash2(codigo, "SHA-256")).toUpperCase();
         String codeControl = hashControl.substring(2, 6) + "-" + hashControl.substring(7, 11) + "-" + hashControl.substring(12, 16);
         System.out.println("Gera um Hash AlfaNumerico = >> " + codeControl);
+        System.out.println("######   a licença Alfa Numerica combina com a do banco? >>>  " + licencaAlfaNumerica.matches(codeControl));
+
+//        System.out.println(stringHexa(gerarHash2(stringToHash, "MD5")));
+//        System.out.println(stringHexa(gerarHash2(stringToHash, "SHA-1")));
+//        System.out.println(stringHexa(gerarHash2(stringToHash, "SHA-256")));
     }
 
     private static String geraHash(String value) {
@@ -35,7 +47,7 @@ public class Main {
         return s.toString();
     }
 
-    private static byte[] gerarHash(String frase, String algoritmo) {
+    private static byte[] gerarHash2(String frase, String algoritmo) {
         try {
             MessageDigest md = MessageDigest.getInstance(algoritmo);
             md.update(frase.getBytes());
